@@ -33,7 +33,7 @@ Key
 ~   The key is a secret, usually a short string of characters, which
     is needed to encrypt or decrypt the ciphertext.
 
-## Reverse Cipher
+## Reverse cipher
 
 One of The simplest cryptography algorithm is the reverse cipher. It
 reverses the letters in the plaintext to obtain the ciphertext. For
@@ -53,7 +53,7 @@ base directory should successfully run the tests.
 
 <div class="pagebreak"> </div>
 
-## Reverse Cipher for byte
+## Reverse cipher for byte
 
 Extend your code so that it treats the string as a byte string and
 reverses the order of bytes instead of each alphabet letter.  Test
@@ -63,7 +63,7 @@ and [memory
 views](https://docs.python.org/3/library/stdtypes.html#memory-views)
 section of python docs.
 
-## Caesar Cipher
+## Caesar cipher
 
 Caesar cipher is a simple substitution cipher that shifts by `k` in
 the alphabet, the cipher key. For example, with `k=3` and English
@@ -72,7 +72,7 @@ that encrypts and decrypts a given generic string, based on this
 Cipher. What is the good generic alphabet that handles all type of
 strings independent of encoding?
 
-## Hacking Caesar Cipher
+## Hacking Caesar cipher
 
 It is very easy to find the encryption key given the ciphertext.
 
@@ -85,3 +85,9 @@ It is very easy to find the encryption key given the ciphertext.
     them. The hacking function/module may be useful there. Discuss the
     design decisions to enable future extensions.
 
+## Transposition cipher
+## Hacking the transposition cipher
+## Substitution cipher
+## Vigenere Cipher
+## Hacking the Vigenere Cipher
+## Public Key Cipher
