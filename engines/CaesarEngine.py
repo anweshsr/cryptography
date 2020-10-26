@@ -15,7 +15,7 @@ class CaesarCipher(Cipher):
                 self.alphabet.cipher_alphabet):
             raise Exception("Length of both alphabet arrays not equal")
 
-    def encodeShift(self, ch, key):
+    def encode_shift(self, ch, key):
         plain_alphabet = self.alphabet.plain_alphabet
         cipher_alphabet = self.alphabet.cipher_alphabet
         if ord(ch) not in plain_alphabet:
@@ -25,7 +25,7 @@ class CaesarCipher(Cipher):
         return cipher_alphabet[
             (plain_alphabet.index(ord(ch)) + key) % len(plain_alphabet)]
 
-    def decodeShift(self, ch, key):
+    def decode_shift(self, ch, key):
         plain_alphabet = self.alphabet.plain_alphabet
         cipher_alphabet = self.alphabet.cipher_alphabet
         if ord(ch) not in cipher_alphabet:
@@ -41,7 +41,7 @@ class CaesarCipher(Cipher):
             return text
         encrypted = ""
         for c in text:
-            x = self.encodeShift(c, self.key)
+            x = self.encode_shift(c, self.key)
             print(x)
             encrypted += chr(x)
         return encrypted
@@ -52,7 +52,7 @@ class CaesarCipher(Cipher):
             return text
         decrypted = ""
         for c in text:
-            decrypted += chr(self.decodeShift(c, self.key))
+            decrypted += chr(self.decode_shift(c, self.key))
         return decrypted
 
 
