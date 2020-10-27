@@ -30,8 +30,3 @@ class Alphabet(object):
             chars_list += [c for c in range(ord(start), ord(end) + 1)]
         return sorted(chars_list)
 
-
-if __name__ == '__main__':
-    alpha = Alphabet('AZ', 'AZ')
-    print(alpha.plain_alphabet)
-    print(alpha.cipher_alphabet)

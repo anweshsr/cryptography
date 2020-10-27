@@ -19,5 +19,8 @@ class ReverseCipherTestCase(unittest.TestCase):
     def test_reverse_cipher5(self):
         assert ReverseCipher().encrypt(12345) == 12345
 
+    def test_reverse_cipher6(self):
+        assert ReverseCipher().encrypt('abcd') != 'dcb'
+
 if __name__ == '__main__':
     unittest.main()

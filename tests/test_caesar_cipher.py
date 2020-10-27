@@ -23,7 +23,7 @@ class CaesarCipherTestCase(unittest.TestCase):
             CaesarCipher("4/azAZ/az")
 
     def test_caesar_cipher_alphabet3(self):
-        assert CaesarCipher("2/azAZ/azAZ").encrypt("None9👍")=="Pqpg9👍"
+        assert CaesarCipher("2/all/all").encrypt("None9👍")=="Pqpg;👏"
 
     def test_caesar_cipher_1(self):
         cs = CaesarCipher("5/AZaz09/AZaz09")
@@ -41,6 +41,13 @@ class CaesarCipherTestCase(unittest.TestCase):
         cs = CaesarCipher("1/AZaz/azAZ")
         assert cs.decrypt(cs.encrypt('None9👍')) == 'None9👍'
 
+    def test_caesar_cipher_5(self):
+        cs = CaesarCipher("1/all/all")
+        assert cs.decrypt(cs.encrypt('ABC')) != 'A'
+
+    def test_caesar_cipher_6(self):
+        cs = CaesarCipher("27/all/all")
+        assert cs.decrypt(cs.encrypt('ABC')) != 'ACB'
 
 if __name__ == '__main__':
     unittest.main()
