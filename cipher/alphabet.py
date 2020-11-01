@@ -17,6 +17,7 @@ class Alphabet(object):
         :param plain_range_options: str, Range options for plaintext alphabet
         :param cipher_range_options: str, Range options for ciphertext alphabet
         """
+        ##TODO: Remove cipher_alphabet
         self.plain_range_options = plain_range_options
         self.cipher_range_options = cipher_range_options
         self.plain_alphabet = self.get_alphabets(self.plain_range_options)
@@ -24,6 +25,7 @@ class Alphabet(object):
 
     def get_alphabets(self, range_options):
         """
+        ##TODO: Implement factory pattern to get alphabet
         Generates the alphabet set given range_options.
         Following are the types of alphabet ranges:
             1. all              : All unicode characters are part of alphabet

@@ -11,6 +11,7 @@ class CaesarCipher(Cipher):
 
     def __init__(self, spec):
         """
+        TODO: add classmethod outside
         Creates a CaesarEngine and Alphabet set for the CaesarEngine provided a specification
         for the alphabet. Spec can be in the following patterns:
         SPEC: [key]/[plainalphabet]/[cipheralphabet]
@@ -48,8 +49,6 @@ class CaesarCipher(Cipher):
         cipher_alphabet = self.alphabet.cipher_alphabet
         if ord(ch) not in plain_alphabet:
             return ord(ch)
-        while key < 0:
-            key += len(plain_alphabet)
         return cipher_alphabet[
             (plain_alphabet.index(ord(ch)) + key) % len(plain_alphabet)]
 
@@ -64,8 +63,6 @@ class CaesarCipher(Cipher):
         cipher_alphabet = self.alphabet.cipher_alphabet
         if ord(ch) not in cipher_alphabet:
             return ord(ch)
-        while key < 0:
-            key += len(cipher_alphabet)
         return plain_alphabet[(cipher_alphabet.index(ord(ch)) +
                                len(cipher_alphabet) - key) % len(cipher_alphabet)]
 
@@ -77,7 +74,11 @@ class CaesarCipher(Cipher):
         """
         if not isinstance(text, str):
             return text
-        encrypted_str = [chr(self.encode_shift(c, self.key)) for c in text]
+        cipher_alphabet = self.alphabet.cipher_alphabet
+        key = self.key
+        while key < 0:
+            key += len(cipher_alphabet)
+        encrypted_str = [chr(self.encode_shift(c, key)) for c in text]
         return "".join(encrypted_str)
 
     def decrypt(self, text):
@@ -88,5 +89,9 @@ class CaesarCipher(Cipher):
         """
         if not isinstance(text, str):
             return text
+        cipher_alphabet = self.alphabet.cipher_alphabet
+        key = self.key
+        while key < 0:
+            key += len(cipher_alphabet)
         decrypted_str = [chr(self.decode_shift(c, self.key)) for c in text]
         return "".join(decrypted_str)

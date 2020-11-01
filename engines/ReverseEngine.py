@@ -14,7 +14,7 @@ class ReverseCipher(Cipher):
         :param text: str or bytes, string or bytes to be reversed
         :return: reversed str or reversed bytes
         """
-        if isinstance(text, str) or isinstance(text, bytes):
+        if isinstance(text, (bytes, str)):
             return text[::-1]
         return text
 
