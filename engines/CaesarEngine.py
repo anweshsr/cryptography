@@ -5,7 +5,7 @@ from cipher.alphabet import Alphabet
 class CaesarCipher(Cipher):
     """
     This engine implements the Caesar Cipher algorithm given a valid key and optional
-    args: plaintext alphabet and ciphertext alphabet.
+    args: alphabet
     Example: if key is 3, plaintext 'd' will become 'g' and 'D' will be 'G'
     """
 
@@ -14,10 +14,10 @@ class CaesarCipher(Cipher):
         TODO: add classmethod outside
         Creates a CaesarEngine and Alphabet set for the CaesarEngine provided a specification
         for the alphabet. Spec can be in the following patterns:
-        SPEC: [key]/[plainalphabet]/[cipheralphabet]
-        Key is compulsory. PlainAlphabet and CipherAlphabet are not.
+        SPEC: [key]/[alphabet]
+        Key is compulsory. Alphabet is not.
         Key must be an int.
-        PlainAlphabet and CipherAlphabet are str.
+        Alphabet is str.
         Following are the types of alphabet ranges:
             1. all              : All unicode characters are part of alphabet
             2. ascii            : Only ascii characters are part of alphabet
@@ -28,15 +28,12 @@ class CaesarCipher(Cipher):
                                   Like azAZ09 means all chars in set{a..z, A..Z, 0..9}
         :param spec: str, The specifications on which Alphabet is built for the cipher
         """
-        key, plain_range, cipher_range = spec.split("/")
-        self.alphabet = Alphabet(plain_range, cipher_range)
+        key, alphabet_range = spec.split("/")
+        self.alphabet = Alphabet(alphabet_range)
         try:
             self.key = int(key)
         except ValueError:
             raise Exception("Key should be int")
-        if len(self.alphabet.plain_alphabet) != len(
-                self.alphabet.cipher_alphabet):
-            raise Exception("Length of both alphabet arrays not equal")
 
     def encode_shift(self, ch, key):
         """
@@ -45,12 +42,11 @@ class CaesarCipher(Cipher):
         :param key: key, The key which is needed for encryption
         :return: encoded character
         """
-        plain_alphabet = self.alphabet.plain_alphabet
-        cipher_alphabet = self.alphabet.cipher_alphabet
-        if ord(ch) not in plain_alphabet:
+        alphabet = self.alphabet.alphabet
+        if ord(ch) not in alphabet:
             return ord(ch)
-        return cipher_alphabet[
-            (plain_alphabet.index(ord(ch)) + key) % len(plain_alphabet)]
+        return alphabet[
+            (alphabet.index(ord(ch)) + key) % len(alphabet)]
 
     def decode_shift(self, ch, key):
         """
@@ -59,12 +55,11 @@ class CaesarCipher(Cipher):
         :param key: key, The key which is needed for decryption
         :return: decrypted character
         """
-        plain_alphabet = self.alphabet.plain_alphabet
-        cipher_alphabet = self.alphabet.cipher_alphabet
-        if ord(ch) not in cipher_alphabet:
+        alphabet = self.alphabet.alphabet
+        if ord(ch) not in alphabet:
             return ord(ch)
-        return plain_alphabet[(cipher_alphabet.index(ord(ch)) +
-                               len(cipher_alphabet) - key) % len(cipher_alphabet)]
+        return alphabet[(alphabet.index(ord(ch)) +
+                               len(alphabet) - key) % len(alphabet)]
 
     def encrypt(self, text):
         """
@@ -74,10 +69,10 @@ class CaesarCipher(Cipher):
         """
         if not isinstance(text, str):
             return text
-        cipher_alphabet = self.alphabet.cipher_alphabet
+        alphabet = self.alphabet.alphabet
         key = self.key
         while key < 0:
-            key += len(cipher_alphabet)
+            key += len(alphabet)
         encrypted_str = [chr(self.encode_shift(c, key)) for c in text]
         return "".join(encrypted_str)
 
@@ -89,9 +84,9 @@ class CaesarCipher(Cipher):
         """
         if not isinstance(text, str):
             return text
-        cipher_alphabet = self.alphabet.cipher_alphabet
+        alphabet = self.alphabet.alphabet
         key = self.key
         while key < 0:
-            key += len(cipher_alphabet)
+            key += len(alphabet)
         decrypted_str = [chr(self.decode_shift(c, self.key)) for c in text]
         return "".join(decrypted_str)

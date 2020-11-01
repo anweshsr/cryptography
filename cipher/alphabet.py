@@ -5,23 +5,19 @@ from cipher import constants
 
 class Alphabet(object):
     """
-    This class sets the plaintext alphabet and ciphertext alphabet.
+    This class sets the alphabet based on the alphabet_range_options provided
     Generally both of them are identical. Encryption encodes a character
-    from plaintext alphabet to ciphertext alphabet
     """
 
-    def __init__(self, plain_range_options, cipher_range_options):
+    def __init__(self, alphabet_range_options):
         """
-        Initializes Alphabet, sets the plaintext alphabet and ciphertext alphabet
+        Initializes Alphabet, sets the alphabet based on the alphabet range provided
         based on the range options provided.
         :param plain_range_options: str, Range options for plaintext alphabet
         :param cipher_range_options: str, Range options for ciphertext alphabet
         """
-        ##TODO: Remove cipher_alphabet
-        self.plain_range_options = plain_range_options
-        self.cipher_range_options = cipher_range_options
-        self.plain_alphabet = self.get_alphabets(self.plain_range_options)
-        self.cipher_alphabet = self.get_alphabets(self.cipher_range_options)
+        self.alphabet_range_options = alphabet_range_options
+        self.alphabet = self.get_alphabets(self.alphabet_range_options)
 
     def get_alphabets(self, range_options):
         """
