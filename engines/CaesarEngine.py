@@ -9,9 +9,8 @@ class CaesarCipher(Cipher):
     Example: if key is 3, plaintext 'd' will become 'g' and 'D' will be 'G'
     """
 
-    def __init__(self, spec):
+    def __init__(self, key, alphabet):
         """
-        TODO: add classmethod outside
         Creates a CaesarEngine and Alphabet set for the CaesarEngine provided a specification
         for the alphabet. Spec can be in the following patterns:
         SPEC: [key]/[alphabet]
@@ -28,12 +27,17 @@ class CaesarCipher(Cipher):
                                   Like azAZ09 means all chars in set{a..z, A..Z, 0..9}
         :param spec: str, The specifications on which Alphabet is built for the cipher
         """
-        key, alphabet_range = spec.split("/")
-        self.alphabet = Alphabet(alphabet_range)
         try:
             self.key = int(key)
         except ValueError:
             raise Exception("Key should be int")
+        self.alphabet = alphabet
+
+    @classmethod
+    def from_specification(cls, spec):
+        key, range_options = spec.split("/")
+        alphabet = Alphabet(range_options)
+        return cls(key, alphabet)
 
     def encode_shift(self, ch, key):
         """
@@ -59,7 +63,7 @@ class CaesarCipher(Cipher):
         if ord(ch) not in alphabet:
             return ord(ch)
         return alphabet[(alphabet.index(ord(ch)) +
-                               len(alphabet) - key) % len(alphabet)]
+                         len(alphabet) - key) % len(alphabet)]
 
     def encrypt(self, text):
         """
