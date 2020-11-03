@@ -76,7 +76,7 @@ class CaesarSolver(Solver):
         :param alphabet:
         :return:
         """
-        key_range = 5
+        key_range = 255
         engine = self.analyze(text, self.dictionary, key_range, alphabet)
         print(engine.decrypt(text))
 
