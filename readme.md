@@ -85,7 +85,57 @@ It is very easy to find the encryption key given the ciphertext.
     them. The hacking function/module may be useful there. Discuss the
     design decisions to enable future extensions.
 
+### English word list
+
+These are a few options for word list:
+
+-   https://github.com/first20hours/google-10000-english
+-   Peter Norvig has big [collection](https://norvig.com/ngrams/). He
+    has a tutorial for [writing spelling
+    checker](http://norvig.com/spell-correct.html) that is useful to
+    read.
+-   On Mac an Linux, there is an alphabetical list at
+    `/usr/share/dict/words`.
+
 ## Transposition cipher
+
+The transposition cipher rearranges the symbols into an order that
+makes the original message unreadable. A variant of the transposition
+cipher is the Columnar transposition. In a columnar transposition, the
+message is written out in rows of a fixed length, and then read out
+again column by column (equivalent to matrix transpose in linear
+algebra). The row width is the key for this algorithm.
+
+Write a `TranspositionCipher` module that handles encryption and
+decryption.
+
+-  The message length is typically not divisible by the key and you
+   need to pad the end of the message with a "null word". The null
+   word could be specified as part of the key. In this case, the key
+   is tuple, for example, `(10, stumptown)`.
+
+-  When using lists in python, you can preallocate the memory. Find
+   out what is the best way to do so and discuss its pitfalls.
+
+### Using bytes
+
+For the Reverse cipher, you made it work with a byte string. From
+encryption and decryption purposes we can define our alphabet to be
+the numbers 0 to 255 (the range of `uint8`, one byte). The benefit of
+this approach is
+
+1.  Any algorithm that we have, can work with this set
+2.  we don't need to worry about interpretation of the byte and can
+    encrypt any text and binary objects.
+
+Update your code to work with bytes and can encrypt any byte
+string. You already saw the `bytearray` an `memoryview`, you can also
+use `ndarray.tobytes` and `numpy.frombuffer`.
+
+Bear in mind that later on, we may switch to larger range and use two
+or more bytes as our alphabets range. Your current code changes should
+not hinder switching to wider alphabet set.
+
 ## Hacking the transposition cipher
 ## Substitution cipher
 ## Vigenere Cipher
