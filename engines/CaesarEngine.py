@@ -27,15 +27,14 @@ class CaesarCipher(Cipher):
                                   Like azAZ09 means all chars in set{a..z, A..Z, 0..9}
         :param spec: str, The specifications on which Alphabet is built for the cipher
         """
-        try:
-            self.key = int(key)
-        except ValueError:
-            raise Exception("Key should be int")
+        assert type(key) == int
+        self.key = key
         self.alphabet = alphabet
 
     @classmethod
     def from_specification(cls, spec):
         key, range_options = spec.split("/")
+        key = int(key)
         alphabet = Alphabet(range_options)
         return cls(key, alphabet)
 

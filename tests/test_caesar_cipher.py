@@ -7,10 +7,6 @@ class CaesarCipherTestCase(unittest.TestCase):
     def test_caesar_cipher_key1(self):
         assert CaesarCipher.from_specification("3/az").encrypt("abcd")=="defg"
 
-    def test_caesar_cipher_key2(self):
-        with pytest.raises(Exception, match="Key should be int"):
-            CaesarCipher.from_specification("c/az")
-
     def test_caesar_cipher_key3(self):
         assert CaesarCipher.from_specification("27/az").encrypt("abc")=="bcd"
 
