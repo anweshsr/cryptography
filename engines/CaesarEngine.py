@@ -64,32 +64,56 @@ class CaesarCipher(Cipher):
         return alphabet[(alphabet.index(ord(ch)) +
                          len(alphabet) - key) % len(alphabet)]
 
-    def encrypt(self, text):
+    def encrypt_bytes(self, byte_array, key):
+        byte_length = self.alphabet.byte_length
+        for i in range(len(byte_array)):
+            byte_array[i] = (byte_array[i] + key) % byte_length
+        return byte_array
+
+    def encrypt(self, text, return_type=None):
         """
         Encrypts a whole string
         :param text: str, The string to be encrypted
         :return: Encrypted string
         """
-        if not isinstance(text, str):
+        if not isinstance(text, (str, bytearray, bytes)):
             return text
         alphabet = self.alphabet.alphabet
         key = self.key
         while key < 0:
             key += len(alphabet)
-        encrypted_str = [chr(self.encode_shift(c, key)) for c in text]
-        return "".join(encrypted_str)
+        bstring = bytearray(text, self.alphabet.encoding) if type(text) == str else bytearray(text)
+        bstring = self.encrypt_bytes(bstring, key)
+        if return_type == str:
+            bstring = bstring.decode(self.alphabet.encoding)
+        return bstring
 
-    def decrypt(self, text):
+    def decrypt_bytes(self, byte_array, key):
+        byte_length = self.alphabet.byte_length
+        for i in range(len(byte_array)):
+            byte_array[i] = (byte_array[i] - key) % byte_length
+        return byte_array
+
+    def decrypt(self, text, return_type=None):
         """
         Decrypts an encrypted string
         :param text: str, The string to be decrypted
         :return: Decrypted string
         """
-        if not isinstance(text, str):
+        if not isinstance(text, (str, bytearray)):
             return text
         alphabet = self.alphabet.alphabet
         key = self.key
         while key < 0:
             key += len(alphabet)
-        decrypted_str = [chr(self.decode_shift(c, self.key)) for c in text]
-        return "".join(decrypted_str)
+        bstring = bytearray(text, self.alphabet.encoding) if isinstance(text, str) else text
+        bstring = self.decrypt_bytes(bstring, key)
+        if return_type == str:
+            bstring = bstring.decode(self.alphabet.encoding)
+        return bstring
+
+if __name__ == '__main__':
+    cc =  CaesarCipher.from_specification("1/all")
+    print(cc.encrypt("^%$", return_type=str))
+    print(cc.decrypt(cc.encrypt("abc"), return_type=str))
+

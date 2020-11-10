@@ -1,4 +1,4 @@
-import unittest
+import unittest, csv
 import pytest
 from engines.ReverseEngine import ReverseCipher
 
@@ -21,6 +21,17 @@ class ReverseCipherTestCase(unittest.TestCase):
 
     def test_reverse_cipher6(self):
         assert ReverseCipher().encrypt('abcd') != 'dcb'
+
+    def test_caesar_encrypt_decrypt_file1(self):
+        test_data_file_path = "./test_cases_reverse_cipher_aray.csv"
+        test_data_file_object = open(test_data_file_path, 'r', encoding='utf-8')
+        csv_reader = csv.reader(test_data_file_object, delimiter=',')
+        for row in csv_reader:
+            print(row)
+            if len(row) == 2:
+                rc = ReverseCipher()
+                assert rc.encrypt(row[0]) == row[1]
+                assert rc.decrypt(rc.encrypt(row[0])) == row[0]
 
 if __name__ == '__main__':
     unittest.main()

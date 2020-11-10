@@ -15,6 +15,8 @@ class Alphabet:
         """
         self.alphabet_range_options = alphabet_range_options
         self.alphabet = self.get_alphabets(self.alphabet_range_options)
+        self.byte_length = 256
+        self.encoding = "utf-8"
 
     def get_alphabets(self, range_options):
         """
