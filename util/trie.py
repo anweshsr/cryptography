@@ -93,37 +93,6 @@ class Dictionary:
         return self.search(item)
 
 
-class Dictionary_old:
-
-    def __init__(self, words):
-        """
-        Root is inialized and all words in the iterable are inserted
-        :param words: Iterable, words iterable
-        """
-        self.root = set()
-        for word in words:
-            self.insert(word)
-
-    @classmethod
-    def from_txt(cls, textFile):
-        """
-        Initializes a dictionary given a text file where every line contains a word.
-        Reads from corpus directory. Only filename is required.
-        :param textFile: str, filename of dictionary to be read present in corpus
-        :return: Dictionary, Trie after inserting all words from file
-        """
-        f = open("../corpus/" + textFile).read().split("\n")
-        return cls(f)
-
-    def insert(self, key):
-        p1 = self.root
-        p1.add(key)
-
-    def search(self, key):
-        p1 = self.root
-        return key in p1
-
-
 if __name__ == '__main__':
     # TODO:Remove after writing test cases
     words = ["the", "a", "there", "anaswe", "any", "by", "their"]
