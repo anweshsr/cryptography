@@ -22,7 +22,7 @@ class ReverseCipher(Cipher):
         :param text: str, The string to be encrypted
         :return: Encrypted string
         """
-        return self._reverse(text)
+        return self._reverse(text) if text else None
 
     def decrypt(self, text: Union[bytes, bytearray]):
         """
@@ -30,4 +30,4 @@ class ReverseCipher(Cipher):
         :param text: str, The string to be decrypted
         :return: Decrypted string
         """
-        return self._reverse(text)
+        return self._reverse(text) if text else None
