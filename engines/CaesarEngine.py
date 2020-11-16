@@ -1,5 +1,4 @@
 from cipher.cipher import Cipher
-from utils.cipher_utils import deprecated
 import typing
 
 
