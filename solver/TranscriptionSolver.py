@@ -1,21 +1,11 @@
 from solver.solverr import Solver
-from engines.CaesarEngine import CaesarCipher
-from util.trie import Dictionary
+from engines.TranspositionEngine import TranspositionCipher
 
+class TranspositionSolver(Solver):
 
-class CaesarSolver(Solver):
-    """
-    This solver does a brute-force approach where it takes all possible keys and decrypts the text.
-    The words of the text are checked in a dictionary. We take the best decryption as the one with
-    the highest number of matches
-    """
     def setup(self, dictionary):
-        """
-        Sets up the solver. Sets a dictionary to the solver
-        :param dictionary:
-        :return:
-        """
         self.dictionary = dictionary
+
 
     def analyze(self, text, dictionary, key_range):
         """
@@ -30,7 +20,7 @@ class CaesarSolver(Solver):
         max_stats = 0
         best_engine = None
         for key in range(1, key_range):
-            engine = CaesarCipher(key)
+            engine = TranspositionCipher(key, "$")
             try:
                 words = text.split(engine.encrypt(bytearray(" ", "utf-8")).decode("utf-8", errors="ignore"))
             except ValueError:
@@ -56,7 +46,6 @@ class CaesarSolver(Solver):
     def get_stats(self, text, cipher, dictionary):
         """
         Currently returns total number of matches a decrypted text has in a dictionary.
-        TODO: Improve this to give score and also generate a proper report
         :param text: str, encrypted text
         :param cipher: CaesarEngine, Cipher required to decrypt
         :param dictionary: Dictionary, dictionary containing the words
@@ -64,6 +53,7 @@ class CaesarSolver(Solver):
         """
         total_matches = 0
         for word in text:
+            print(word)
             byte_text = cipher.decrypt(bytearray(word, "utf-8"))
             raw_text = byte_text.decode("utf-8", errors="ignore")
             match = self.search(raw_text, dictionary)
@@ -75,21 +65,20 @@ class CaesarSolver(Solver):
         Sets the key_range. Currently set to 255.
         Analyses the text by decrypting and checking in dictionary for all possible keys.
         Prints the best match
-        TODO: Work on key_range
         :param text:
         :param alphabet:
         :return:
         """
-        key_range = 255
+        key_range = len(text)
         engine = self.analyze(text, self.dictionary, key_range)
-        return engine.key
-
+        return engine
 
 if __name__ == '__main__':
-    #TODO: Remove after writing test cases
-    solver = CaesarSolver()
+    tc = TranspositionCipher.from_specification("2")
+    from util.trie import Dictionary
     dictionary = Dictionary.from_txt("english-20k-words.txt")
-    cipher = CaesarCipher.from_specification("5")
-    print(cipher.encrypt(bytearray("Fgyns%Wfmnrnfs%Fs|jxm%Xnsmf%Wf~", "utf-8")))
+    print(tc.encrypt(bytearray("a man was here", "utf-8")))
+    solver = TranspositionSolver()
     solver.setup(dictionary)
-    print(solver.run("Fgyns%Wfmnrnfs%Fs|jxm%Xnsmf%Wf~"))
+    solver.run('amnwshr a a ee')
+    print(tc.decrypt(bytearray('amnwshr a a ee',"utf-8")))
