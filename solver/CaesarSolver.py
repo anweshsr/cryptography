@@ -17,7 +17,7 @@ class CaesarSolver(Solver):
         """
         self.dictionary = dictionary
 
-    def analyze(self, text, dictionary, key_range, alphabet):
+    def analyze(self, text, dictionary, key_range):
         """
         This method gives the best caesar engine which solves the encrypted text. It returns None if
         there is no match in the given dictionary.
@@ -29,15 +29,18 @@ class CaesarSolver(Solver):
         """
         max_stats = 0
         best_engine = None
-        for key in range(key_range):
-            engine = CaesarCipher(key, alphabet)
-            words = text.split(engine.encrypt(" "))
+        for key in range(1, key_range):
+            engine = CaesarCipher(key)
+            try:
+                words = text.split(engine.encrypt(bytearray(" ", "utf-8")).decode("utf-8", errors="ignore"))
+            except ValueError:
+                continue
             stats = self.get_stats(words, engine, dictionary)
             if stats > max_stats:
                 max_stats = stats
                 best_text = ""
                 for word in words:
-                    best_text += (engine.decrypt(word) + " ")
+                    best_text += (engine.decrypt(bytearray(word,"utf-8")).decode("utf-8") + " ")
                 best_engine = engine
         return best_engine if best_engine!=None else None
 
@@ -61,12 +64,13 @@ class CaesarSolver(Solver):
         """
         total_matches = 0
         for word in text:
-            raw_text = cipher.decrypt(word)
+            byte_text = cipher.decrypt(bytearray(word, "utf-8"))
+            raw_text = byte_text.decode("utf-8", errors="ignore")
             match = self.search(raw_text, dictionary)
             total_matches += match
         return total_matches
 
-    def run(self, text, alphabet):
+    def run(self, text):
         """
         Sets the key_range. Currently set to 255.
         Analyses the text by decrypting and checking in dictionary for all possible keys.
@@ -77,16 +81,15 @@ class CaesarSolver(Solver):
         :return:
         """
         key_range = 255
-        engine = self.analyze(text, self.dictionary, key_range, alphabet)
-        print(engine.decrypt(text))
+        engine = self.analyze(text, self.dictionary, key_range)
+        return engine
 
 
 if __name__ == '__main__':
     #TODO: Remove after writing test cases
     solver = CaesarSolver()
     dictionary = Dictionary.from_txt("english-20k-words.txt")
-    cipher = CaesarCipher.from_specification("1/all")
-    print(cipher.encrypt("Abtin Rahimian Anwesh Sinha Ray"))
+    cipher = CaesarCipher.from_specification("1")
+    print(cipher.encrypt(bytearray("Abtin Rahimian Anwesh Sinha Ray", "utf-8")))
     solver.setup(dictionary)
-    from cipher import alphabet
-    solver.run("Bcujo!Sbijnjbo!Boxfti!Tjoib!Sbz", alphabet.Alphabet("all"))
+    solver.run("Bcujo!Sbijnjbo!Boxfti!Tjoib!Sbz")

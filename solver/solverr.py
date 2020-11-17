@@ -10,5 +10,5 @@ class Solver(ABC):
         pass
 
     @abstractmethod
-    def run(self, text, alphabet):
+    def run(self, text):
         pass
