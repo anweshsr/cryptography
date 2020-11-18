@@ -138,6 +138,21 @@ not hinder switching to wider alphabet set.
 
 ## Hacking the transposition cipher
 ## Substitution cipher
+
+The key for substitution cipher is a dictionary (or a list of tuples)
+that map each alphabet to its substitute. For example using the key
+`[(a, d), (b, z), ..., (1, w)]`, `ab1` has `dzw` as the
+ciphertext. For a byte alphabet this is a map from 0-255 to 0-255,
+`[(0, 38), (1, 44), ...]`.
+
+1.  Write a `SubstitutionCipher` module that handles encryption and
+    decryption.
+2.  Discuss the algorithmic complexity of a brute force hacking of
+    substitution cipher.
+3.  Write a function or prepare a Jupyter notebook that finds the
+    likely key for a given ciphertext encrypted a simple _English
+    text_ (i.e., `[a-zA-Z0-9]` alphabet).
+
 ## Vigenere Cipher
 ## Hacking the Vigenere Cipher
 ## Public Key Cipher
