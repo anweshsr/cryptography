@@ -1,4 +1,5 @@
 import math
+import numpy as np
 
 from cipher.cipher import Cipher
 
@@ -48,6 +49,7 @@ class TranspositionCipher(Cipher):
     """
     def __init__(self, key, null_word):
         assert type(key) == int
+        assert key > 0
         self.key = key
         self.null_word = null_word
 
@@ -71,20 +73,39 @@ class TranspositionCipher(Cipher):
             xs.append(byte)
         return xs
 
-    def encrypt(self, text, return_type=None):
+    def encrypt_bytes_basic(self, barray: bytearray, key: int) -> bytearray:
+        ciphertext = [b''] * key
+        for col in range(key):
+            currentIndex = col
+            while currentIndex<len(barray):
+                ciphertext[col] += bytes(barray[currentIndex])
+                currentIndex += key
+        return bytearray(b''.join(ciphertext))
+
+    def encrypt_bytes_numpy(self, barray: bytearray, key: int) -> bytearray:
         """
-        Takes bytes, string, bytearray and encrypts it
-        :param text: (bytes, str, bytearray)
-        :param return_type: str or None
-        :return: str or bytearray
+        Encrypts a bytearray using numpy functions
+        :param barray: bytearray, The byte array to be encrypted
+        :param key: int, The key which is used to encrypt the bytearray
+        :return: Encrypted bytes
         """
-        if not isinstance(text, (str, bytearray, bytes)):
-            return text
+        nparray = np.frombuffer(barray, dtype=np.uint8)
+        row = int(math.ceil(len(barray)/key))
+        diff = row*key - len(barray)
+        nparray = np.append(nparray, diff * [ord(self.null_word)])
+        nparray = nparray.astype(np.uint8)
+        matrix = nparray.reshape((row, key))
+        transpose_mat = matrix.transpose()
+        return transpose_mat.tobytes()
+
+    def encrypt(self, barray: bytearray) -> bytearray:
+        """
+        Encrypts a byte array
+        :param text: bytearray, The byte array to be encrypted
+        :return: Encrypted bytes
+        """
         key = self.key
-        bytestring = bytearray(text, "utf-8") if type(text)==str else bytearray(text)
-        encrypted_bytes = self.encrypt_bytes(bytestring, key)
-        if return_type==str:
-            encrypted_bytes = encrypted_bytes.decode("utf-8")
+        encrypted_bytes = self.encrypt_bytes_numpy(barray, key)
         return encrypted_bytes
 
     def decrypt_bytes(self, text, key):
@@ -101,24 +122,42 @@ class TranspositionCipher(Cipher):
             xs.append(byte)
         return xs
 
-    def decrypt(self, text, return_type=None):
+    def decrypt_bytes_basic(self, barray: bytearray, key: int) -> bytearray:
+        col = int(math.ceil(len(barray)/float(key)))
+        row = key
+        diff = (col * row) - len(barray)
+        plaintext = [b''] * col
+        i, j = 0, 0
+        for char in barray:
+            plaintext[i]+=char
+            i+=1
+            if (i==col) or (i==col-1 and j>=row - diff):
+                i=0
+                j+=1
+        return bytearray(b'').join(plaintext)
+
+    def decrypt_bytes_numpy(self, barray: bytearray, key: int) -> bytearray:
+        nparray = np.frombuffer(barray, dtype=np.uint8)
+        row = key
+        col = int(math.ceil(len(nparray)/row))
+        matrix = nparray.reshape((row, col))
+        transpose_mat = matrix.transpose()
+        transpose_mat = transpose_mat.flatten()
+        transpose_mat = np.delete(transpose_mat, np.where(transpose_mat == ord(self.null_word)))
+        return bytearray(transpose_mat.tobytes())
+
+    def decrypt(self, barray: bytearray) -> bytearray:
         """
-        Decrypts a string or bytearray or bytes into string
-        :param text: (string, bytearray, bytes)
-        :param return_type: str or None
+        Decrypts a bytearray object
+        :param text: bytearray
         :return:
         """
-        if not isinstance(text, (str, bytearray, bytes)):
-            return text
         key = self.key
-        bytestring = bytearray(text, "utf-8") if type(text)==str else bytearray(text)
-        decrypted_bytes = self.decrypt_bytes(bytestring, key)
-        if return_type==str:
-            decrypted_bytes = decrypted_bytes.decode("utf-8")
+        decrypted_bytes = self.decrypt_bytes_numpy(barray, key)
         return decrypted_bytes
 
 if __name__ == '__main__':
-    tc = TranspositionCipher(3, "$")
-    print(tc.encrypt("1234567898", return_type=str))
-    print(tc.encrypt("1478258$369$"))
-    print(tc.decrypt("1478258$369$", return_type=str))
+    tc = TranspositionCipher(130, "$")
+    print(tc.encrypt(bytearray("1234567898", "utf-8")))
+    print(tc.decrypt(bytearray("", "utf-8")))
+    print(tc.decrypt(tc.encrypt(bytearray("hello world!", "utf-8"))))

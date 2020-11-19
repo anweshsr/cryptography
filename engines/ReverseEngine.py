@@ -1,5 +1,5 @@
 from cipher.cipher import Cipher
-
+from typing import Union
 
 class ReverseCipher(Cipher):
     """
@@ -8,28 +8,26 @@ class ReverseCipher(Cipher):
     Example: if plaintext is 'ab' the ciphertext is 'ba'
     """
 
-    def _reverse(self, text):
+    def _reverse(self, text: Union[bytes, bytearray]):
         """
-        Reverses a str or bytes
+        Reverses bytes
         :param text: str or bytes, string or bytes to be reversed
         :return: reversed str or reversed bytes
         """
-        if isinstance(text, (bytes, str)):
-            return text[::-1]
-        return text
+        return text[::-1]
 
-    def encrypt(self, text):
+    def encrypt(self, text: Union[bytes, bytearray]):
         """
         Encrypts a whole string
         :param text: str, The string to be encrypted
         :return: Encrypted string
         """
-        return self._reverse(text)
+        return self._reverse(text) if text else None
 
-    def decrypt(self, text):
+    def decrypt(self, text: Union[bytes, bytearray]):
         """
-        Decrypts an encrypted string
+        Decrypts bytes
         :param text: str, The string to be decrypted
         :return: Decrypted string
         """
-        return self._reverse(text)
+        return self._reverse(text) if text else None
